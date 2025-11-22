@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,7 @@
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
@@ -45,7 +46,7 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .status-badge {
@@ -240,14 +241,16 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 3px solid rgba(255, 255, 255, .3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .alert {
@@ -299,6 +302,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -329,7 +333,7 @@
         <div class="card">
             <h2>🚀 Start New Red-Teaming Mission</h2>
             <div id="alertContainer"></div>
-            
+
             <form id="missionForm">
                 <div class="form-group">
                     <label for="targetUrl">Target System URL</label>
@@ -402,7 +406,7 @@
                 const response = await fetch(`${API_BASE}/health`);
                 const data = await response.json();
                 const statusEl = document.getElementById('systemStatus');
-                
+
                 if (data.status === 'healthy') {
                     statusEl.textContent = 'Healthy';
                     statusEl.className = 'status-badge status-healthy';
@@ -430,7 +434,7 @@
         // Start mission
         document.getElementById('missionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const targetUrl = document.getElementById('targetUrl').value;
             const maxPrompts = parseInt(document.getElementById('maxPrompts').value);
             const authToken = document.getElementById('authToken').value;
@@ -482,7 +486,7 @@
         // Poll mission status
         async function pollMissions() {
             const missionList = document.getElementById('missionList');
-            
+
             if (missions.length === 0) {
                 missionList.innerHTML = '<p style="color: #6b7280;">No active missions. Start a new mission above.</p>';
                 return;
@@ -498,10 +502,10 @@
                     const data = await response.json();
 
                     if (data.status === 'running') activeCount++;
-                    
+
                     const progress = (data.progress || 0) * 100;
                     const statusClass = `status-${data.status}`;
-                    
+
                     html += `
                         <div class="mission-item">
                             <div class="mission-header">
@@ -516,8 +520,45 @@
                             <p style="margin-top: 10px; color: #6b7280;">
                                 Vulnerabilities Found: ${data.vulnerabilities_found || 0}
                             </p>
-                        </div>
                     `;
+                    
+                    // If mission is completed, fetch and show vulnerabilities
+                    if (data.status === 'completed' && data.vulnerabilities_found > 0) {
+                        try {
+                            const reportResponse = await fetch(`${API_BASE}/missions/${missionId}/report`);
+                            const report = await reportResponse.json();
+                            
+                            if (report.vulnerabilities && report.vulnerabilities.length > 0) {
+                                html += '<div class="vulnerability-list">';
+                                html += '<h4 style="margin: 15px 0 10px 0; color: #374151;">Vulnerabilities:</h4>';
+                                
+                                report.vulnerabilities.forEach(vuln => {
+                                    const severityClass = `severity-${vuln.severity.toLowerCase()}`;
+                                    html += `
+                                        <div class="vulnerability-item ${severityClass}">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                <strong>${vuln.category}</strong>
+                                                <span class="status-badge status-${vuln.severity === 'HIGH' ? 'failed' : vuln.severity === 'MEDIUM' ? 'running' : 'completed'}" 
+                                                      style="font-size: 0.8em;">${vuln.severity}</span>
+                                            </div>
+                                            <p style="color: #6b7280; font-size: 0.9em; margin: 5px 0;">
+                                                ${vuln.description}
+                                            </p>
+                                            <p style="color: #9ca3af; font-size: 0.85em; margin-top: 5px;">
+                                                Evidence: ${vuln.evidence}
+                                            </p>
+                                        </div>
+                                    `;
+                                });
+                                
+                                html += '</div>';
+                            }
+                        } catch (error) {
+                            console.error(`Error fetching report for ${missionId}:`, error);
+                        }
+                    }
+                    
+                    html += '</div>';
 
                     totalVulns += data.vulnerabilities_found || 0;
                 } catch (error) {
@@ -526,7 +567,7 @@
             }
 
             missionList.innerHTML = html;
-            
+
             // Update stats
             document.getElementById('totalMissions').textContent = missions.length;
             document.getElementById('activeMissions').textContent = activeCount;
@@ -551,4 +592,5 @@
         pollMissions();
     </script>
 </body>
+
 </html>
