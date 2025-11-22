@@ -1,0 +1,17 @@
+# Core API Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# Hugging Face Integration
+huggingface-hub==0.19.4
+requests==2.31.0
+
+# Vector Store
+faiss-cpu>=1.9.0
+numpy>=1.26.0
+
+# Utilities
+python-multipart==0.0.6

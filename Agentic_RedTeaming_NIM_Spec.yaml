@@ -1,0 +1,72 @@
+project:
+  name: Agentic AI Red-Teaming Assistant (NIM-Hosted, No-Local-GPU)
+  description: |
+    Agentic Red-Teaming MVP using NVIDIA hosted NIMs only (no local weights).
+    Planner/Executor uses Llama-3.1-Nemotron-Nano-8B-v1 via OpenAI-compatible NIM API.
+    Retriever uses a Retrieval Embedding NIM (e.g., NV-Embed-QA).
+    Deployable via AWS KIRO on EKS or SageMaker endpoints.
+
+objectives:
+  - Use NVIDIA NIM endpoints only (OpenAI-compatible)
+  - Reasoning model: nvidia/llama-3.1-nemotron-nano-8b-v1
+  - Retrieval Embedding NIM: NV-Embed-QA (or equivalent NeMo Retriever)
+  - Generate structured vulnerability reports
+  - Deploy as container or direct hosted API
+
+architecture:
+  agents:
+    - name: CoordinatorAgent
+      role: Orchestrates mission (plan → execute → evaluate)
+    - name: AttackPlannerAgent
+      role: Generates adversarial prompts (Nemotron NIM)
+    - name: RetrieverAgent
+      role: Embeddings via NV-Embed-QA NIM, stored in FAISS
+    - name: ExecutorAgent
+      role: Executes prompts using NIM chat API
+    - name: EvaluatorAgent
+      role: Classifies vulnerabilities, ranks severity
+
+components:
+  language: python3.10
+  frameworks:
+    - fastapi
+    - uvicorn
+    - openai
+    - faiss-cpu
+    - numpy
+    - boto3
+    - pydantic
+    - requests
+    - pyyaml
+  storage:
+    logs: s3://agentic-redteam-logs/
+    vector_index: local_faiss
+
+environment_variables:
+  - NVIDIA_API_KEY
+  - NIM_BASE_URL=https://integrate.api.nvidia.com/v1
+  - NIM_LLM_MODEL=nvidia/llama-3.1-nemotron-nano-8b-v1
+  - NIM_EMBED_MODEL=NV-Embed-QA
+  - RESULTS_BUCKET
+  - STOP_TEST=0
+
+deployment:
+  containerization:
+    base_image: python:3.10-slim
+    expose_port: 8080
+    entrypoint: "uvicorn app:app --host 0.0.0.0 --port 8080"
+    working_dir: /app
+  eks:
+    replicas: 2
+    service_type: LoadBalancer
+    cpu: "2"
+    memory: "4Gi"
+  sagemaker:
+    instance_type: ml.g5.xlarge
+    endpoint_name: redteam-mvp-endpoint
+
+governance_and_safety:
+  policies:
+    - Only run with explicit authorization.
+    - STOP_TEST flag halts all red-teaming runs.
+    - Logs must exclude PII and API secrets.
