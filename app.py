@@ -54,6 +54,105 @@ async def health_check():
     }
 
 
+@app.post("/demo/mock-ai")
+async def mock_ai_endpoint(request: dict):
+    """Mock AI endpoint for demo purposes."""
+    return {
+        "response": "This is a mock AI response for demonstration purposes.",
+        "model": "demo-model",
+        "usage": {"tokens": 42}
+    }
+
+
+# Demo mission endpoints (simplified for demonstration)
+from datetime import datetime
+import uuid
+from typing import Dict
+from models.api_models import MissionRequest, MissionResponse
+
+# In-memory storage for demo missions
+demo_missions: Dict[str, dict] = {}
+
+
+@app.post("/missions/start", response_model=MissionResponse)
+async def start_mission(request: MissionRequest):
+    """Start a new red-teaming mission (demo version)."""
+    mission_id = f"mission_{uuid.uuid4().hex[:8]}"
+    
+    # Store mission info
+    demo_missions[mission_id] = {
+        "mission_id": mission_id,
+        "status": "running",
+        "created_at": datetime.now().isoformat(),
+        "progress": 0.0,
+        "vulnerabilities_found": 0,
+        "target_url": str(request.target_system_url),
+        "categories": request.attack_categories,
+        "max_prompts": request.max_prompts
+    }
+    
+    return MissionResponse(
+        mission_id=mission_id,
+        status="running",
+        created_at=datetime.now().isoformat(),
+        progress=0.0
+    )
+
+
+@app.get("/missions/{mission_id}/status")
+async def get_mission_status(mission_id: str):
+    """Get the status of a mission (demo version)."""
+    if mission_id not in demo_missions:
+        return {"error": "Mission not found"}, 404
+    
+    mission = demo_missions[mission_id]
+    
+    # Simulate progress
+    if mission["progress"] < 1.0:
+        mission["progress"] = min(1.0, mission["progress"] + 0.1)
+        mission["vulnerabilities_found"] = int(mission["progress"] * 5)
+        
+        if mission["progress"] >= 1.0:
+            mission["status"] = "completed"
+    
+    return {
+        "mission_id": mission_id,
+        "status": mission["status"],
+        "progress": mission["progress"],
+        "vulnerabilities_found": mission["vulnerabilities_found"],
+        "created_at": mission["created_at"]
+    }
+
+
+@app.get("/missions/{mission_id}/report")
+async def get_mission_report(mission_id: str):
+    """Get the vulnerability report for a mission (demo version)."""
+    if mission_id not in demo_missions:
+        return {"error": "Mission not found"}, 404
+    
+    mission = demo_missions[mission_id]
+    
+    return {
+        "mission_id": mission_id,
+        "status": mission["status"],
+        "target_url": mission["target_url"],
+        "attack_categories": mission["categories"],
+        "total_prompts": mission["max_prompts"],
+        "vulnerabilities_found": mission["vulnerabilities_found"],
+        "vulnerabilities": [
+            {
+                "id": f"vuln_{i}",
+                "severity": "HIGH" if i % 3 == 0 else "MEDIUM",
+                "category": mission["categories"][i % len(mission["categories"])],
+                "description": f"Demo vulnerability {i+1}",
+                "evidence": "Demo evidence"
+            }
+            for i in range(mission["vulnerabilities_found"])
+        ],
+        "summary": f"Found {mission['vulnerabilities_found']} vulnerabilities in demo mission"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
