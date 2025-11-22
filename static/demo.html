@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Mode - Agentic AI Red-Teaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 40px;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            color: #a0aec0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .feature-desc {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .architecture {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 60px;
+        }
+
+        .architecture h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+        }
+
+        .agents-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .agent-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .stat-box {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 1.2em;
+            color: #a0aec0;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="hero">
+            <h1>🛡️ Agentic AI Red-Teaming Assistant</h1>
+            <p>Automated Security Testing for AI Systems</p>
+            <p style="font-size: 1.2em; margin-top: 20px; color: #667eea;">
+                Multi-Agent System | Real-Time Monitoring | Production Ready
+            </p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">5</div>
+                <div class="stat-label">AI Agents</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Attack Categories</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Automated</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">$0</div>
+                <div class="stat-label">API Costs</div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-title">Multi-Agent System</div>
+                <div class="feature-desc">
+                    Five specialized AI agents work together to plan, execute, and evaluate security tests
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Real-Time Monitoring</div>
+                <div class="feature-desc">
+                    Live dashboard with progress tracking, status updates, and vulnerability counts
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">Security First</div>
+                <div class="feature-desc">
+                    Automatic PII redaction, authorization tokens, and emergency stop capabilities
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Detailed Reports</div>
+                <div class="feature-desc">
+                    Comprehensive JSON reports with severity scores and remediation suggestions
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔌</div>
+                <div class="feature-title">REST API</div>
+                <div class="feature-desc">
+                    Full API for integration into CI/CD pipelines and existing workflows
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <div class="feature-title">Cost Effective</div>
+                <div class="feature-desc">
+                    Uses free Hugging Face tier - no expensive API costs or cloud infrastructure
+                </div>
+            </div>
+        </div>
+
+        <div class="architecture">
+            <h2>🏗️ Multi-Agent Architecture</h2>
+            <div class="agents-flow">
+                <div class="agent-box">
+                    <div style="font-size: 2em;">📋</div>
+                    <div style="font-weight: bold; margin-top: 10px;">Coordinator</div>
+                    <div style="font-size: 0.9em; margin-top: 5px;">Orchestrates</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="agent-box">
+                    <div style="font-size: 2em;">🎯</div>
+                    <div style="font-weight: bold; margin-top: 10px;">Attack Planner</div>
+                    <div style="font-size: 0.9em; margin-top: 5px;">Generates Prompts</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="agent-box">
+                    <div style="font-size: 2em;">⚙️</div>
+                    <div style="font-weight: bold; margin-top: 10px;">Executor</div>
+                    <div style="font-size: 0.9em; margin-top: 5px;">Tests System</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="agent-box">
+                    <div style="font-size: 2em;">🔍</div>
+                    <div style="font-weight: bold; margin-top: 10px;">Evaluator</div>
+                    <div style="font-size: 0.9em; margin-top: 5px;">Analyzes Results</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="agent-box">
+                    <div style="font-size: 2em;">📚</div>
+                    <div style="font-weight: bold; margin-top: 10px;">Retriever</div>
+                    <div style="font-size: 0.9em; margin-top: 5px;">Finds Similar</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="font-size: 2.5em; margin-bottom: 20px;">Ready to See It in Action?</h2>
+            <p style="font-size: 1.3em; margin-bottom: 30px;">
+                Launch the interactive dashboard and start your first red-teaming mission
+            </p>
+            <a href="/" class="cta-button">Launch Dashboard →</a>
+            <div style="margin-top: 30px;">
+                <a href="/docs" style="color: white; text-decoration: none; margin: 0 20px;">
+                    📖 API Documentation
+                </a>
+                <a href="https://github.com/koyeliaghosh/agentic-redteaming-hf" 
+                   style="color: white; text-decoration: none; margin: 0 20px;" 
+                   target="_blank">
+                    💻 View on GitHub
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

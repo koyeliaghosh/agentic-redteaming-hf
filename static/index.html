@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Red-Teaming Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-healthy {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-running {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .status-completed {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .status-failed {
+            background: #ef4444;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #f3f4f6;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .mission-list {
+            margin-top: 20px;
+        }
+
+        .mission-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .mission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .mission-id {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .vulnerability-list {
+            margin-top: 15px;
+        }
+
+        .vulnerability-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .severity-high {
+            border-left-color: #ef4444;
+        }
+
+        .severity-medium {
+            border-left-color: #f59e0b;
+        }
+
+        .severity-low {
+            border-left-color: #10b981;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Agentic AI Red-Teaming Assistant</h1>
+            <p>Automated Vulnerability Detection for AI Systems</p>
+        </div>
+
+        <!-- System Status -->
+        <div class="card">
+            <h2>System Status <span id="systemStatus" class="status-badge status-healthy">Checking...</span></h2>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalMissions">0</div>
+                    <div class="stat-label">Total Missions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeMissions">0</div>
+                    <div class="stat-label">Active Missions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalVulnerabilities">0</div>
+                    <div class="stat-label">Vulnerabilities Found</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Mission Form -->
+        <div class="card">
+            <h2>🚀 Start New Red-Teaming Mission</h2>
+            <div id="alertContainer"></div>
+            
+            <form id="missionForm">
+                <div class="form-group">
+                    <label for="targetUrl">Target System URL</label>
+                    <input type="url" id="targetUrl" placeholder="https://api.example.com/chat" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Attack Categories</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="category" value="prompt_injection" checked>
+                            <span>Prompt Injection</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="category" value="jailbreak">
+                            <span>Jailbreak</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="category" value="data_extraction">
+                            <span>Data Extraction</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="category" value="bias_exploitation">
+                            <span>Bias Exploitation</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="category" value="hallucination_induction">
+                            <span>Hallucination Induction</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="category" value="context_confusion">
+                            <span>Context Confusion</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxPrompts">Maximum Prompts</label>
+                    <input type="number" id="maxPrompts" min="1" max="100" value="10" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="authToken">Authorization Token</label>
+                    <input type="password" id="authToken" placeholder="your_secret_token_123" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="startBtn">
+                    <span>Start Mission</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Active Missions -->
+        <div class="card">
+            <h2>📊 Active Missions</h2>
+            <div id="missionList" class="mission-list">
+                <p style="color: #6b7280;">No active missions. Start a new mission above.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+        let missions = [];
+        let pollInterval = null;
+
+        // Check system health
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                const statusEl = document.getElementById('systemStatus');
+                
+                if (data.status === 'healthy') {
+                    statusEl.textContent = 'Healthy';
+                    statusEl.className = 'status-badge status-healthy';
+                } else {
+                    statusEl.textContent = 'Degraded';
+                    statusEl.className = 'status-badge status-failed';
+                }
+            } catch (error) {
+                const statusEl = document.getElementById('systemStatus');
+                statusEl.textContent = 'Offline';
+                statusEl.className = 'status-badge status-failed';
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            alertContainer.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Start mission
+        document.getElementById('missionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const targetUrl = document.getElementById('targetUrl').value;
+            const maxPrompts = parseInt(document.getElementById('maxPrompts').value);
+            const authToken = document.getElementById('authToken').value;
+            const categories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+                .map(cb => cb.value);
+
+            if (categories.length === 0) {
+                showAlert('Please select at least one attack category', 'error');
+                return;
+            }
+
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<span class="loading"></span><span>Starting...</span>';
+
+            try {
+                const response = await fetch(`${API_BASE}/missions/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        target_system_url: targetUrl,
+                        attack_categories: categories,
+                        max_prompts: maxPrompts,
+                        authorization_token: authToken
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert(`Mission ${data.mission_id} started successfully!`, 'success');
+                    missions.push(data.mission_id);
+                    updateStats();
+                    startPolling();
+                    document.getElementById('missionForm').reset();
+                } else {
+                    showAlert(`Error: ${data.detail || 'Failed to start mission'}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Error: ${error.message}`, 'error');
+            } finally {
+                startBtn.disabled = false;
+                startBtn.innerHTML = '<span>Start Mission</span>';
+            }
+        });
+
+        // Poll mission status
+        async function pollMissions() {
+            const missionList = document.getElementById('missionList');
+            
+            if (missions.length === 0) {
+                missionList.innerHTML = '<p style="color: #6b7280;">No active missions. Start a new mission above.</p>';
+                return;
+            }
+
+            let html = '';
+            let activeCount = 0;
+            let totalVulns = 0;
+
+            for (const missionId of missions) {
+                try {
+                    const response = await fetch(`${API_BASE}/missions/${missionId}/status`);
+                    const data = await response.json();
+
+                    if (data.status === 'running') activeCount++;
+                    
+                    const progress = (data.progress || 0) * 100;
+                    const statusClass = `status-${data.status}`;
+                    
+                    html += `
+                        <div class="mission-item">
+                            <div class="mission-header">
+                                <span class="mission-id">Mission: ${missionId}</span>
+                                <span class="status-badge ${statusClass}">${data.status.toUpperCase()}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%">
+                                    ${progress.toFixed(0)}%
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px; color: #6b7280;">
+                                Vulnerabilities Found: ${data.vulnerabilities_found || 0}
+                            </p>
+                        </div>
+                    `;
+
+                    totalVulns += data.vulnerabilities_found || 0;
+                } catch (error) {
+                    console.error(`Error polling mission ${missionId}:`, error);
+                }
+            }
+
+            missionList.innerHTML = html;
+            
+            // Update stats
+            document.getElementById('totalMissions').textContent = missions.length;
+            document.getElementById('activeMissions').textContent = activeCount;
+            document.getElementById('totalVulnerabilities').textContent = totalVulns;
+        }
+
+        // Start polling
+        function startPolling() {
+            if (!pollInterval) {
+                pollInterval = setInterval(pollMissions, 2000);
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('totalMissions').textContent = missions.length;
+        }
+
+        // Initialize
+        checkHealth();
+        setInterval(checkHealth, 30000);
+        pollMissions();
+    </script>
+</body>
+</html>
