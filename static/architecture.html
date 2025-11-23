@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architecture - Agentic AI Red-Teaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .nav-buttons {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 0 10px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .architecture-diagram {
+            background: #f9fafb;
+            padding: 40px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .agent-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .agent-box:hover {
+            transform: scale(1.05);
+        }
+
+        .agent-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .agent-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .agent-role {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .arrow {
+            font-size: 2.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 3em;
+            color: #667eea;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .tech-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .data-flow {
+            background: #f9fafb;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .step-desc {
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ System Architecture</h1>
+            <p>Multi-Agent AI Red-Teaming System</p>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="/" class="nav-btn">← Dashboard</a>
+            <a href="/demo.html" class="nav-btn">Demo Page</a>
+            <a href="/docs" class="nav-btn">API Docs</a>
+        </div>
+
+        <!-- Multi-Agent Architecture -->
+        <div class="card">
+            <h2>🤖 Multi-Agent Architecture</h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">
+                Five specialized AI agents collaborate to perform comprehensive security testing
+            </p>
+
+            <div class="architecture-diagram">
+                <div class="flow-container">
+                    <!-- Coordinator -->
+                    <div class="flow-row">
+                        <div class="agent-box" style="min-width: 300px;">
+                            <div class="agent-icon">📋</div>
+                            <div class="agent-name">Coordinator Agent</div>
+                            <div class="agent-role">Orchestrates the entire red-teaming mission</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">↓</div>
+
+                    <!-- Attack Planner -->
+                    <div class="flow-row">
+                        <div class="agent-box">
+                            <div class="agent-icon">🎯</div>
+                            <div class="agent-name">Attack Planner</div>
+                            <div class="agent-role">Generates adversarial prompts using LLMs</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">↓</div>
+
+                    <!-- Executor -->
+                    <div class="flow-row">
+                        <div class="agent-box">
+                            <div class="agent-icon">⚙️</div>
+                            <div class="agent-name">Executor Agent</div>
+                            <div class="agent-role">Tests prompts against target system</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">↓</div>
+
+                    <!-- Evaluator and Retriever -->
+                    <div class="flow-row">
+                        <div class="agent-box">
+                            <div class="agent-icon">🔍</div>
+                            <div class="agent-name">Evaluator Agent</div>
+                            <div class="agent-role">Analyzes responses for vulnerabilities</div>
+                        </div>
+                        <div class="arrow">↔</div>
+                        <div class="agent-box">
+                            <div class="agent-icon">📚</div>
+                            <div class="agent-name">Retriever Agent</div>
+                            <div class="agent-role">Finds similar past vulnerabilities</div>
+                        </div>
+                    </div>
+
+                    <div class="arrow-down">↓</div>
+
+                    <!-- Report Generation -->
+                    <div class="flow-row">
+                        <div class="agent-box" style="min-width: 300px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            <div class="agent-icon">📊</div>
+                            <div class="agent-name">Vulnerability Report</div>
+                            <div class="agent-role">Detailed findings with severity scores</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Flow -->
+        <div class="card">
+            <h2>🔄 Data Flow</h2>
+            <p style="color: #6b7280; margin-bottom: 20px;">
+                Step-by-step process of a red-teaming mission
+            </p>
+
+            <div class="data-flow">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Mission Initialization</div>
+                        <div class="step-desc">User submits target URL, attack categories, and authorization token via API or web interface</div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Prompt Generation</div>
+                        <div class="step-desc">Attack Planner Agent uses Mistral-7B to generate adversarial prompts based on selected categories</div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Prompt Execution</div>
+                        <div class="step-desc">Executor Agent sends prompts to target system and captures responses with timing data</div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Response Analysis</div>
+                        <div class="step-desc">Evaluator Agent analyzes responses using LLM to identify vulnerabilities and assign severity scores</div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Similarity Search</div>
+                        <div class="step-desc">Retriever Agent uses FAISS vector store to find similar past vulnerabilities for context</div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-title">Report Generation</div>
+                        <div class="step-desc">Coordinator Agent compiles findings into comprehensive JSON report with remediation suggestions</div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <div class="step-title">Storage & Logging</div>
+                        <div class="step-desc">Report saved to local storage, all activities logged with automatic PII redaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="card">
+            <h2>🛠️ Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h4>FastAPI</h4>
+                    <p style="font-size: 0.9em;">REST API Framework</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Mistral-7B</h4>
+                    <p style="font-size: 0.9em;">LLM for Text Generation</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Sentence Transformers</h4>
+                    <p style="font-size: 0.9em;">Embedding Model</p>
+                </div>
+                <div class="tech-item">
+                    <h4>FAISS</h4>
+                    <p style="font-size: 0.9em;">Vector Similarity Search</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Pydantic</h4>
+                    <p style="font-size: 0.9em;">Data Validation</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Python Logging</h4>
+                    <p style="font-size: 0.9em;">PII Redaction</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="card">
+            <h2>✨ Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>🔄 Async Processing</h3>
+                    <p>Non-blocking operations for high performance</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔒 Security First</h3>
+                    <p>Automatic PII redaction and authorization controls</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📊 Real-time Monitoring</h3>
+                    <p>Live progress tracking and status updates</p>
+                </div>
+                <div class="feature-item">
+                    <h3>💾 Local Storage</h3>
+                    <p>No cloud dependencies, all data stored locally</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🎯 Multi-Category Testing</h3>
+                    <p>6 attack categories including prompt injection and jailbreak</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📈 Scalable Design</h3>
+                    <p>Handle 100+ prompts per mission</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔌 REST API</h3>
+                    <p>Easy integration into CI/CD pipelines</p>
+                </div>
+                <div class="feature-item">
+                    <h3>💰 Cost Effective</h3>
+                    <p>Uses free Hugging Face tier - $0 API costs</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/" class="nav-btn" style="font-size: 1.2em; padding: 15px 40px;">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>
