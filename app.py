@@ -44,6 +44,24 @@ async def root():
     return {"message": "Welcome to Agentic AI Red-Teaming Assistant API"}
 
 
+@app.get("/architecture.html")
+async def architecture():
+    """Serve the architecture page."""
+    static_file = static_dir / "architecture.html"
+    if static_file.exists():
+        return FileResponse(str(static_file))
+    return {"error": "Architecture page not found"}
+
+
+@app.get("/demo.html")
+async def demo():
+    """Serve the demo page."""
+    static_file = static_dir / "demo.html"
+    if static_file.exists():
+        return FileResponse(str(static_file))
+    return {"error": "Demo page not found"}
+
+
 @app.get("/health")
 async def health_check():
     """Basic health check endpoint."""
